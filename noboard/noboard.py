@@ -1,5 +1,6 @@
 import os
 import csv
+import time
 import socket
 from datetime import datetime
 
@@ -33,10 +34,11 @@ class SummaryWriter:
         self.all_handles[tag] = handle
         self.all_writers[tag] = writer
 
-    def add_scalar(self, tag, scalar_value, global_step=None):
+    def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
+        wall = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
-        self.all_writers[tag].writerow([global_step, scalar_value])
+        self.all_writers[tag].writerow([global_step, scalar_value, wall])
 
     def flush(self):
         for writer in self.all_writers:
