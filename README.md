@@ -13,7 +13,7 @@ NOTE: This is an early version. A work in progress.
 ```bash
 git clone git@github.com:parenthetical-e/noboard.git
 cd noboard
-pip install -e .
+pip install .
 ```
     
 # usage
