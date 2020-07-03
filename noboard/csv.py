@@ -30,8 +30,23 @@ class SummaryWriter:
         """Returns the directory where csv files will be written."""
         return self.log_dir
 
+    def _parse_tag(self, tag):
+        s_path = os.path.split(tag)
+        path, tag_name = s_path
+        return path, tag_name
+
     def _init_scalar_writer(self, tag):
+        # Test for a path in the tag
+        path, tag_name = self._parse_tag(tag)
+        if len(tag_name) == 0:
+            raise ValueError(f"A tag can't end in a directory {tag}")
+        if len(path) > 0:
+            try:
+                os.makedirs(os.path.join(self.log_dir, path))
+            except FileExistsError:
+                pass
         file_name = os.path.join(self.log_dir, f"{tag}.csv")
+
         handle = open(file_name, mode='a+')
         writer = csv.writer(handle)
 
@@ -43,7 +58,12 @@ class SummaryWriter:
 
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
+            # Init
             self._init_scalar_writer(tag)
+            # Add header
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(["global_step", tag_name, "t"])
+
         self.all_writers[tag].writerow([global_step, scalar_value, t])
 
     def add_text(self, tag, text_string, global_step=None, walltime=None):
@@ -51,7 +71,11 @@ class SummaryWriter:
 
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
+            # Init
             self._init_scalar_writer(tag)
+            # Add header
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(["global_step", tag_name, "t"])
         self.all_writers[tag].writerow([global_step, text_string, t])
 
     def add_histogram(self,
@@ -66,7 +90,12 @@ class SummaryWriter:
 
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
+            # Init
             self._init_scalar_writer(tag)
+            # Header
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(
+                ["global_step", "bins", tag_name, "t"])
 
         if (bins > max_bins) and (max_bins is not None):
             bins = max_bins
