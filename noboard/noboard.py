@@ -9,9 +9,7 @@ import numpy as np
 class SummaryWriter:
     """Writes entries directly to csv files in the log_dir.
 
-    NOTE: This is a limited version tensorboard's SummaryWriter. It is for when 
-    you don't need tensorboard, or any progress board. You just need to log 
-    some data.
+    NOTE: This is a limited version tensorboard's SummaryWriter.
     """
     def __init__(self, log_dir=None, comment=""):
         # Create a unique log_dir name, if needed
