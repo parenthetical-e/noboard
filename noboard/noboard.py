@@ -35,10 +35,16 @@ class SummaryWriter:
         self.all_writers[tag] = writer
 
     def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
-        wall = time.time() if walltime is None else walltime
+        t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
-        self.all_writers[tag].writerow([global_step, scalar_value, wall])
+        self.all_writers[tag].writerow([global_step, scalar_value, t])
+
+    def add_text(self, tag, text_string, global_step=None, walltime=None):
+        t = time.time() if walltime is None else walltime
+        if tag not in self.all_writers:
+            self._init_scalar_writer(tag)
+        self.all_writers[tag].writerow([global_step, text_string, t])
 
     def flush(self):
         for writer in self.all_writers:
