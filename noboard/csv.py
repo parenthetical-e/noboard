@@ -104,16 +104,16 @@ class SummaryWriter:
         for h, ed in zip(hist, bin_edges):
             self.all_writers[tag].writerow([global_step, h, ed, t])
 
-    def flush(self):
-        """Flushes the events to disk.
-        
-        Call this method to make sure that all pending events have 
-        been written to disk.
-        """
-        for writer in self.all_writers:
-            writer.flush()
+    # def flush(self):
+    #     """Flushes the events to disk.
+
+    #     Call this method to make sure that all pending events have
+    #     been written to disk.
+    #     """
+    #     for handle in self.all_handles.values():
+    #         writer.flush()
 
     def close(self):
-        self.flush()
-        for handle in self.all_handles:
+        # self.flush()
+        for handle in self.all_handles.values():
             handle.close()
