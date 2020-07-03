@@ -7,17 +7,18 @@ NOTE: This is an early version. A work in progress.
 
 # dependencies
 - python >= 3.6
+- numpy
 
 # install
 ```bash
 git clone git@github.com:parenthetical-e/noboard.git
 cd noboard
-pip install -e .
+pip install .
 ```
     
 # usage
 ```python
-from noboard import SummaryWriter
+from noboard.csv import SummaryWriter
 writer = SummaryWriter(log_dir=None) # creates runs/
 for n in range(100):
     writer.add_scalar("reward", reward, n)
