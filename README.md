@@ -7,6 +7,7 @@ NOTE: This is an early version. A work in progress.
 
 # dependencies
 - python >= 3.6
+- numpy
 
 # install
 ```bash
