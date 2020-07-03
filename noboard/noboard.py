@@ -3,6 +3,7 @@ import csv
 import time
 import socket
 from datetime import datetime
+import numpy as np
 
 
 class SummaryWriter:
@@ -45,6 +46,25 @@ class SummaryWriter:
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
         self.all_writers[tag].writerow([global_step, text_string, t])
+
+    def add_histogram(self,
+                      tag,
+                      values,
+                      global_step=None,
+                      walltime=None,
+                      bins=10,
+                      max_bins=None,
+                      range=None):
+        t = time.time() if walltime is None else walltime
+        if tag not in self.all_writers:
+            self._init_scalar_writer(tag)
+
+        if bins > max_bins:
+            bins = max_bins
+
+        hist, bin_edges = np.histogram(values, bins=bins, range=range)
+        for h, ed in zip(hist, bin_edges):
+            self.all_writers[tag].writerow([global_step, h, ed, t])
 
     def flush(self):
         for writer in self.all_writers:
