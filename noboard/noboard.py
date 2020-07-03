@@ -59,7 +59,7 @@ class SummaryWriter:
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
 
-        if bins > max_bins:
+        if (bins > max_bins) and (max_bins is not None):
             bins = max_bins
 
         hist, bin_edges = np.histogram(values, bins=bins, range=range)
