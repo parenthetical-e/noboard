@@ -9,7 +9,9 @@ import numpy as np
 class SummaryWriter:
     """Writes entries directly to csv files in the log_dir.
 
-    NOTE: This is a limited version tensorboard's SummaryWriter.
+    NOTE: This is a limited version tensorboard's SummaryWriter. It is for when 
+    you don't need tensorboard, or any progress board. You just need to log 
+    some data.
     """
     def __init__(self, log_dir=None, comment=""):
         # Create a unique log_dir name, if needed
@@ -27,7 +29,7 @@ class SummaryWriter:
         self.all_handles = {}
 
     def get_logdir(self):
-        """Returns the directory where event files will be written."""
+        """Returns the directory where csv files will be written."""
         return self.log_dir
 
     def _init_scalar_writer(self, tag):
