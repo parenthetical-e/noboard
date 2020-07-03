@@ -7,7 +7,10 @@ import numpy as np
 
 
 class SummaryWriter:
-    """A limited version tensorboard's writer, that is csv backed."""
+    """Writes entries directly to csv files in the log_dir.
+
+    NOTE: This is a limited version tensorboard's SummaryWriter.
+    """
     def __init__(self, log_dir=None, comment=""):
         # Create a unique log_dir name, if needed
         if not log_dir:
@@ -36,12 +39,16 @@ class SummaryWriter:
         self.all_writers[tag] = writer
 
     def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
+        """"Add scalar data to summary."""
+
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
         self.all_writers[tag].writerow([global_step, scalar_value, t])
 
     def add_text(self, tag, text_string, global_step=None, walltime=None):
+        """Add text data to summary."""
+
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
@@ -55,6 +62,8 @@ class SummaryWriter:
                       bins=10,
                       max_bins=None,
                       range=None):
+        """Add histogram to summary."""
+
         t = time.time() if walltime is None else walltime
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
@@ -67,6 +76,11 @@ class SummaryWriter:
             self.all_writers[tag].writerow([global_step, h, ed, t])
 
     def flush(self):
+        """Flushes the events to disk.
+        
+        Call this method to make sure that all pending events have 
+        been written to disk.
+        """
         for writer in self.all_writers:
             writer.flush()
 
