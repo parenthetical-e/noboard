@@ -8,7 +8,7 @@ NOTE: This is an early version. A work in progress. Especially tensor -> scalar 
 # motivation
 - Tensorboard saves its data to a hidden away json file. You could parse that, for much the same effect. But the format is to me opaque. This library is a simpler answer that promises its data format is stable, and clear. 
 
--`noboard` matches the `tensorboard.SummaryWriter` interface, as best it can, to make it easy to change between them.
+- `noboard` matches the `tensorboard.SummaryWriter` interface, as best it can, to make it easy to change between them.
 
 # dependencies
 - python >= 3.6
