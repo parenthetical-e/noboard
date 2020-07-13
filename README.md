@@ -2,6 +2,7 @@
 Sometimes you don't need tensorboard, or any progress board at all. You just need to log some data.
 
 The `noboard.SummaryWriter` mocks a part of the familiar `tensorboard.SummaryWriter` interface, but logs data to csv files or other simple common formats. 
+
 NOTE: This is an early version. A work in progress.
 
 # details
