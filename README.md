@@ -6,7 +6,7 @@ The `noboard.SummaryWriter` mocks a part of the familiar `tensorboard.SummaryWri
 NOTE: This is an early version. A work in progress.
 
 # details
-Tensorboard saves its data to a hidden away json file. You could parse that, for much the same effect. But the format is to me opaque and not documented. This library is a simpler answer that promises its data format is stable, and clear. 
+Tensorboard saves its data to a hidden away json file. You could parse that, for much the same effect. But the format is to me opaque. This library is a simpler answer that promises its data format is stable, and clear. 
 
 I match the `tensorboard.SummaryWriter` interface, as best I can, to make it easy to change between them.
 
