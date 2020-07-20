@@ -111,6 +111,6 @@ class SummaryWriter:
                 self.all_writers[tag].writerow([global_step, h, ed, t])
 
     def close(self):
-        # self.flush()
-        for handle in self.all_handles.values():
-            handle.close()
+        if self.write_to_disk:
+            for handle in self.all_handles.values():
+                handle.close()
