@@ -6,6 +6,19 @@ from datetime import datetime
 import numpy as np
 
 
+class NoWriter:
+    def writerow(self):
+        pass
+
+    def writerows(self):
+        pass
+
+
+class NoHandle:
+    def close(self):
+        pass
+
+
 class SummaryWriter:
     """Writes entries directly to csv files in the log_dir.
 
@@ -42,8 +55,10 @@ class SummaryWriter:
 
     def _init_scalar_writer(self, tag):
         if self.write_to_disk:
-            # Test for a path in the tag
+            # Parse the tag
             path, tag_name = self._parse_tag(tag)
+
+            # Create its filename
             if len(tag_name) == 0:
                 raise ValueError(f"A tag can't end in a directory {tag}")
             if len(path) > 0:
@@ -53,36 +68,43 @@ class SummaryWriter:
                     pass
             file_name = os.path.join(self.log_dir, f"{tag}.csv")
 
+            # Create its writer, or...
             handle = open(file_name, mode='a+')
             writer = csv.writer(handle)
+        else:
+            # ...create Dummy objects if we aren't
+            # writing to disk
+            handle = NoHandle()
+            writer = NoWriter()
 
-            self.all_handles[tag] = handle
-            self.all_writers[tag] = writer
+        # Add writer and handle the rest
+        self.all_handles[tag] = handle
+        self.all_writers[tag] = writer
 
     def add_scalar(self, tag, scalar_value, global_step=None, walltime=None):
         """"Add scalar data to summary."""
-        if self.write_to_disk:
-            t = time.time() if walltime is None else walltime
-            if tag not in self.all_writers:
-                # Init
-                self._init_scalar_writer(tag)
-                # Add header
-                _, tag_name = self._parse_tag(tag)
-                self.all_writers[tag].writerow(["global_step", tag_name, "t"])
 
-            self.all_writers[tag].writerow([global_step, scalar_value, t])
+        # Init and add header?
+        if tag not in self.all_writers:
+            self._init_scalar_writer(tag)
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(["global_step", tag_name, "t"])
+
+        # Write
+        t = time.time() if walltime is None else walltime
+        self.all_writers[tag].writerow([global_step, scalar_value, t])
 
     def add_text(self, tag, text_string, global_step=None, walltime=None):
         """Add text data to summary."""
-        if self.write_to_disk:
-            t = time.time() if walltime is None else walltime
-            if tag not in self.all_writers:
-                # Init
-                self._init_scalar_writer(tag)
-                # Add header
-                _, tag_name = self._parse_tag(tag)
-                self.all_writers[tag].writerow(["global_step", tag_name, "t"])
-            self.all_writers[tag].writerow([global_step, text_string, t])
+        # Init and add header?
+        if tag not in self.all_writers:
+            self._init_scalar_writer(tag)
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(["global_step", tag_name, "t"])
+
+        # Write
+        t = time.time() if walltime is None else walltime
+        self.all_writers[tag].writerow([global_step, text_string, t])
 
     def add_histogram(self,
                       tag,
@@ -93,24 +115,22 @@ class SummaryWriter:
                       max_bins=None,
                       range=None):
         """Add histogram to summary."""
-        if self.write_to_disk:
-            t = time.time() if walltime is None else walltime
-            if tag not in self.all_writers:
-                # Init
-                self._init_scalar_writer(tag)
-                # Header
-                _, tag_name = self._parse_tag(tag)
-                self.all_writers[tag].writerow(
-                    ["global_step", "bins", tag_name, "t"])
+        # Init and add header?
+        if tag not in self.all_writers:
+            self._init_scalar_writer(tag)
+            _, tag_name = self._parse_tag(tag)
+            self.all_writers[tag].writerow(
+                ["global_step", "bins", tag_name, "t"])
 
-            if (bins > max_bins) and (max_bins is not None):
-                bins = max_bins
+        # Write
+        if (bins > max_bins) and (max_bins is not None):
+            bins = max_bins
 
-            hist, bin_edges = np.histogram(values, bins=bins, range=range)
-            for h, ed in zip(hist, bin_edges):
-                self.all_writers[tag].writerow([global_step, h, ed, t])
+        t = time.time() if walltime is None else walltime
+        hist, bin_edges = np.histogram(values, bins=bins, range=range)
+        for h, ed in zip(hist, bin_edges):
+            self.all_writers[tag].writerow([global_step, h, ed, t])
 
     def close(self):
-        if self.write_to_disk:
-            for handle in self.all_handles.values():
-                handle.close()
+        for handle in self.all_handles.values():
+            handle.close()
