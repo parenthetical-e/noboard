@@ -7,10 +7,10 @@ import numpy as np
 
 
 class NoWriter:
-    def writerow(self):
+    def writerow(self, *args, **kwargs):
         pass
 
-    def writerows(self):
+    def writerows(self, *args, **kwargs):
         pass
 
 
