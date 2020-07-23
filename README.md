@@ -35,5 +35,5 @@ Use `py.test` to run the tests for this package.
 git clone git@github.com:parenthetical-e/noboard.git
 cd noboard
 pip install pytest # if not installed
-py.test
+py.test # should run all tests
 ```
