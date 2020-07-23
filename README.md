@@ -28,3 +28,12 @@ writer = SummaryWriter(log_dir=None) # creates runs/
 for n in range(100):
     writer.add_scalar("reward", reward, n)
 ```
+
+# tests
+Use `py.test` to run the tests for this package. 
+```bash
+git clone git@github.com:parenthetical-e/noboard.git
+cd noboard
+pip install pytest # if not installed
+py.test
+```
