@@ -55,6 +55,7 @@ class SummaryWriter:
 
     def _init_scalar_writer(self, tag):
         if self.write_to_disk:
+
             # Parse the tag
             path, tag_name = self._parse_tag(tag)
 
@@ -96,6 +97,7 @@ class SummaryWriter:
 
     def add_text(self, tag, text_string, global_step=None, walltime=None):
         """Add text data to summary."""
+
         # Init and add header?
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
@@ -115,6 +117,7 @@ class SummaryWriter:
                       max_bins=None,
                       range=None):
         """Add histogram to summary."""
+
         # Init and add header?
         if tag not in self.all_writers:
             self._init_scalar_writer(tag)
@@ -132,5 +135,6 @@ class SummaryWriter:
             self.all_writers[tag].writerow([global_step, h, ed, t])
 
     def close(self):
+        """Close all file handles"""
         for handle in self.all_handles.values():
             handle.close()

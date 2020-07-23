@@ -44,9 +44,9 @@ def test_scalar_no_write_to_disk():
 
     # Test
     if os.path.exists("test/scalar.csv"):
-        assert False
+        assert False  # fail
     else:
-        assert True
+        assert True  # pass
 
     # Cleaup from this test
     shutil.rmtree("test", ignore_errors=True)
